@@ -1,15 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace LeaveManagement.Model
 {
     public class EmployeeLeaveDBContext : DbContext
     {
-
 
         public EmployeeLeaveDBContext(DbContextOptions<EmployeeLeaveDBContext> options)
             : base(options)

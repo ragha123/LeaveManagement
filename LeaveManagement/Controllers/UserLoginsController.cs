@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LeaveManagement.Model;
@@ -37,10 +34,8 @@ namespace LeaveManagement.Controllers
 
                 if (user != null)
                 {
-                    //create claims details based on the user information
                     var claims = new[] {
                     new Claim(ClaimTypes.Name,user.Username)
-                    //new Claim("password",user.Password)
                    };
 
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
