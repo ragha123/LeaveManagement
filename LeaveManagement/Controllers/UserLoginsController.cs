@@ -29,7 +29,7 @@ namespace LeaveManagement.Controllers
         /// <response code="201">Successfully created Token.</response>
         /// <response code="400">Request has missing/invalid values.</response>
         [HttpPost("authenticate")]
-        [ProducesResponseType(typeof(JwtAuthenticationModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(OkObjectResult), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
@@ -42,5 +42,42 @@ namespace LeaveManagement.Controllers
             }
             return Ok(token);
         }
+
+        /// <summary>
+        /// create a leave Request
+        /// </summary>
+        /// <param name="request">The details of the Leave to be created.</param>
+        /// <response code="201">created Leave Request.</response>
+        /// <response code="400">REquest has the values which is essensial.</response>
+        /// <response code="401">Access token is missing or invalid.</response>
+        /// <response code="403">Action not permitted for specified API key.</response>
+        [Authorize]
+        [HttpPost("leaveRequest")]
+        [ProducesResponseType(typeof(OkResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
+        public IActionResult RequestLeave([FromBody][Required] LeaveRequest request)
+        {
+            try
+            {
+                using (EmployeeLeaveDBContext entities = new EmployeeLeaveDBContext())
+                {
+                    if (entities.Employee.FirstOrDefault(x => x.EmpId == request.RequestingEmployeeId) != null)
+                    {
+                        entities.LeaveRequests.Add(request);
+                        entities.SaveChanges();
+                    }
+                }
+            }
+            catch
+            {
+                return this.NotFound();
+            }
+
+            return this.Ok();
+        }
+
+
     }
 }

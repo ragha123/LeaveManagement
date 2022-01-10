@@ -15,48 +15,48 @@ namespace LeaveManagement
 {
     public class JwtAuthenticationManager: IJwtAuthenticationManager
     {
-        private readonly IOptions<JwtAuthenticationModel> _jwtAuthentication;
+        private readonly IOptions<JwtAuthenticationModel> jwtAuthentication;
         private readonly EmployeeLeaveDBContext _context;
 
         public JwtAuthenticationManager(IOptions<JwtAuthenticationModel> jwtAuthentication, EmployeeLeaveDBContext context)
         {
-            this._jwtAuthentication = jwtAuthentication;
+            this.jwtAuthentication = jwtAuthentication;
             _context = context;
         }
 
-        public  string Post(UserLogin _userData, string username, string password)
+        public  string Post(UserLogin userData, string username, string password)
         {
 
-            if (_userData != null && _userData.Username != null && _userData.Password != null)
+            if (userData != null && userData.Username != null && userData.Password != null)
             {
-                
                 var user = _context.Registrationtab.FirstOrDefault(x => x.Username == username && x.Password == password);
 
-               // var user = await GetUser(_userData.Username, _userData.Password);
                 if (user != null)
                 {
                     var claims = new[] {
                     new Claim(ClaimTypes.Name,user.Username)
                    };
 
-                    var token = new JwtSecurityToken(_jwtAuthentication.Value.ValidIssuer, _jwtAuthentication.Value.ValidAudience,
-                                                       claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: _jwtAuthentication.Value.SigningCredentials);
+                    var token = new JwtSecurityToken(jwtAuthentication.Value.ValidIssuer,
+                                                     jwtAuthentication.Value.ValidAudience,
+                                                     claims,
+                                                     expires: DateTime.UtcNow.AddMinutes(5),
+                                                     signingCredentials: jwtAuthentication.Value.SigningCredentials);
 
                     return new JwtSecurityTokenHandler().WriteToken(token);
                 }
-                return null;
+                else
+                {
+                    return null;
+                }
             }
             else
             {
                 return null;
             }
-            
+
         }
 
-        private async Task<UserLogin> GetUser(string username, string password)
-        {
-            return await _context.Registrationtab.FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
-        }
     }
 }
 
