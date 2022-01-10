@@ -1,66 +1,46 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using LeaveManagement.Model;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using LeaveManagement.Model;
-using Microsoft.Extensions.Configuration;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace LeaveManagement.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class UserLoginsController : ControllerBase
+    [Route("api/[controller]")]
+    public class UserLoginsController : Controller
     {
-        public IConfiguration _configuration;
-        private readonly EmployeeLeaveDBContext _context;
+        private readonly IJwtAuthenticationManager jwtAuthenticationManager;
 
-        public UserLoginsController(IConfiguration config, EmployeeLeaveDBContext context)
+        public UserLoginsController(IJwtAuthenticationManager jwtAuthenticationManager)
         {
-            _configuration = config;
-            _context = context;
+            this.jwtAuthenticationManager = jwtAuthenticationManager;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post(UserLogin _userData)
+
+        /// <summary>
+        /// To generate Token.
+        /// </summary>
+        /// <param name="userCred">The details of the UserCredential to create an token.</param>
+        /// <returns>The Token.</returns>
+        /// <response code="201">Successfully created Token.</response>
+        /// <response code="400">Request has missing/invalid values.</response>
+        [HttpPost("authenticate")]
+        [ProducesResponseType(typeof(JwtAuthenticationModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
+        public  IActionResult Post([FromBody] UserLogin userCred)
         {
-
-            if (_userData != null && _userData.Username != null && _userData.Password != null)
+            var token = jwtAuthenticationManager.Post(userCred, userCred.Username,userCred.Password);
+            if (token == null)
             {
-                var user = await GetUser(_userData.Username, _userData.Password);
-
-                if (user != null)
-                {
-                    var claims = new[] {
-                    new Claim(ClaimTypes.Name,user.Username)
-                   };
-
-                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
-
-                    var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-                    var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], _configuration["Jwt:Audience"], 
-                                                       claims, expires: DateTime.UtcNow.AddDays(1), signingCredentials: signIn);
-
-                    return Ok(new JwtSecurityTokenHandler().WriteToken(token));
-                }
-                else
-                {
-                    return BadRequest("Invalid credentials");
-                }
+                return Unauthorized();
             }
-            else
-            {
-                return BadRequest();
-            }
-        }
-
-        private async Task<UserLogin> GetUser(string username, string password)
-        {
-            return await _context.Registrationtab.FirstOrDefaultAsync(u => u.Username == username && u.Password == password);
+            return Ok(token);
         }
     }
 }

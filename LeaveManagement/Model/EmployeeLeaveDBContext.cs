@@ -4,6 +4,9 @@ namespace LeaveManagement.Model
 {
     public class EmployeeLeaveDBContext : DbContext
     {
+        public EmployeeLeaveDBContext()
+        {
+        }
 
         public EmployeeLeaveDBContext(DbContextOptions<EmployeeLeaveDBContext> options)
             : base(options)
@@ -12,22 +15,16 @@ namespace LeaveManagement.Model
 
         public virtual DbSet<Company> Company { get; set; }
         public virtual DbSet<Employee> Employee { get; set; }
-        public virtual DbSet<LeaveDetails> LeaveDetails { get; set; }
+        public virtual DbSet<LeaveAllocation> LeaveAllocations { get; set; }
+        public virtual DbSet<JwtAuthenticationModel> TokenAuthentication { get; set; }
+        public virtual DbSet<LeaveType> LeaveTypes { get; set; }
+        public virtual  DbSet<LeaveRequest> LeaveRequests { get; set; }
         public virtual DbSet<Projects> Projects { get; set; }
         public virtual DbSet<UserLogin> Registrationtab { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Company>()
-            .HasMany(c => c.Employee)
-             .WithOne(e => e.Company);
-
-            builder.Entity<Employee>()
-            .HasMany(c => c.Projects)
-             .WithOne(e => e.Emp);
-
-            builder.Entity<LeaveDetails>().HasNoKey();
-
+            base.OnModelCreating(builder);
         }
     }
 }
