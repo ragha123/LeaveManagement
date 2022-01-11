@@ -15,12 +15,10 @@ namespace LeaveManagement.Controllers
     public class LeaveManagementController : Controller
     {
         private readonly IJwtAuthenticationManager jwtAuthenticationManager;
-        private readonly EmployeeLeaveDBContext _context;
 
-        public LeaveManagementController(IJwtAuthenticationManager jwtAuthenticationManager, EmployeeLeaveDBContext context)
+        public LeaveManagementController(IJwtAuthenticationManager jwtAuthenticationManager)
         {
             this.jwtAuthenticationManager = jwtAuthenticationManager;
-            this._context = context;
         }
 
 
