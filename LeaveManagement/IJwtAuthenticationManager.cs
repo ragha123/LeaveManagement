@@ -9,7 +9,7 @@ namespace LeaveManagement
 {
     public interface IJwtAuthenticationManager
     {
-       string Post(UserLogin _userData, string username, string password);
+       string Post(Employee employee, string username, string password);
         public IActionResult RequestLeave(LeaveRequest request);
 
 

@@ -7,22 +7,18 @@ namespace LeaveManagement.Model
     public class LeaveRequest
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [ForeignKey("RequestingEmployeeId")]
         public virtual Employee RequestingEmployee { get; set; }
-        public int RequestingEmployeeId { get; set; }
+        public Employee Employee { get; set; }
+        [Required]
         public DateTime StartDate { get; set; }
+        [Required]
         public DateTime EndDate { get; set; }
-
-        [ForeignKey("LeaveTypeId")]
-        public virtual LeaveType LeaveType { get; set; }
-        public int LeaveTypeId { get; set; }
-        public DateTime DateRequested { get; set; }
-        public string RequestComments { get; set; }
-        public DateTime DateActioned { get; set; }
-        public bool? Approved { get; set; }
-        public bool Cancelled { get; set; }
-        public string ApprovedById { get; set; }
+        public string Comments { get; set; }
+        public Status Status { get; set; }
+        public Employee Approver { get; set; }
     }
 }

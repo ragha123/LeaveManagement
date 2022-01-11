@@ -24,19 +24,18 @@ namespace LeaveManagement
             _context = context;
         }
 
-        public  string Post(UserLogin _userData, string username, string password)
+        public  string Post(Employee _userData, string username, string password)
         {
 
             if (_userData != null && _userData.Username != null && _userData.Password != null)
             {
                 
-                var user = _context.Registrationtab.FirstOrDefault(x => x.Username == username && x.Password == password);
+                var user = _context.Employee.FirstOrDefault(x => x.Username == username && x.Password == password);
 
-               // var user = await GetUser(_userData.Username, _userData.Password);
                 if (user != null)
                 {
                     var claims = new[] {
-                    new Claim(ClaimTypes.Name,user.Username)
+                    new Claim(ClaimTypes.Name,username)
                    };
 
                     var token = new JwtSecurityToken(_jwtAuthentication.Value.ValidIssuer,
@@ -55,7 +54,7 @@ namespace LeaveManagement
         }
         public IActionResult RequestLeave(LeaveRequest request)
         {
-            var Employee = _context.Employee.FirstOrDefault(x => x.EmpId == request.RequestingEmployeeId);
+            var Employee = _context.Employee.FirstOrDefault(x => x.Id == request.Employee.Id);
             if (Employee != null)
             {
                 _context.LeaveRequests.Add(request);

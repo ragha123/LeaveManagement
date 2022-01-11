@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LeaveManagement.Migrations
 {
     [DbContext(typeof(EmployeeLeaveDBContext))]
-    [Migration("20220110052209_leavemanagement")]
-    partial class leavemanagement
+    [Migration("20220111135904_LeaveManagement")]
+    partial class LeaveManagement
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,22 +23,23 @@ namespace LeaveManagement.Migrations
 
             modelBuilder.Entity("LeaveManagement.Model.Company", b =>
                 {
-                    b.Property<int>("CompanyId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Companyname")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
-                    b.HasKey("CompanyId");
+                    b.HasKey("Id");
 
                     b.ToTable("Company");
                 });
 
             modelBuilder.Entity("LeaveManagement.Model.Employee", b =>
                 {
-                    b.Property<int>("EmpId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -46,24 +47,41 @@ namespace LeaveManagement.Migrations
                     b.Property<int>("CompanyId")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("CompanyId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Salary")
-                        .HasColumnType("int");
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
-                    b.HasKey("EmpId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex("CompanyId1");
 
                     b.ToTable("Employee");
                 });
@@ -100,20 +118,9 @@ namespace LeaveManagement.Migrations
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("LeaveTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NumberOfDays")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Period")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("EmpId");
-
-                    b.HasIndex("LeaveTypeId");
 
                     b.ToTable("LeaveAllocations");
                 });
@@ -125,64 +132,36 @@ namespace LeaveManagement.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool?>("Approved")
-                        .HasColumnType("bit");
+                    b.Property<int?>("ApproverId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("ApprovedById")
+                    b.Property<string>("Comments")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("DateActioned")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateRequested")
-                        .HasColumnType("datetime2");
+                    b.Property<int?>("EmployeeId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("LeaveTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RequestComments")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RequestingEmployeeId")
+                    b.Property<int?>("RequestingEmployeeId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("LeaveTypeId");
+                    b.HasIndex("ApproverId");
+
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("RequestingEmployeeId");
 
                     b.ToTable("LeaveRequests");
-                });
-
-            modelBuilder.Entity("LeaveManagement.Model.LeaveType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("DefaultDays")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("LeaveTypes");
                 });
 
             modelBuilder.Entity("LeaveManagement.Model.Projects", b =>
@@ -211,29 +190,11 @@ namespace LeaveManagement.Migrations
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("LeaveManagement.Model.UserLogin", b =>
-                {
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("EmployeeId");
-
-                    b.ToTable("Registrationtab");
-                });
-
             modelBuilder.Entity("LeaveManagement.Model.Employee", b =>
                 {
                     b.HasOne("LeaveManagement.Model.Company", "Company")
                         .WithMany("Employee")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CompanyId1");
 
                     b.Navigation("Company");
                 });
@@ -244,32 +205,26 @@ namespace LeaveManagement.Migrations
                         .WithMany()
                         .HasForeignKey("EmpId");
 
-                    b.HasOne("LeaveManagement.Model.LeaveType", "LeaveType")
-                        .WithMany()
-                        .HasForeignKey("LeaveTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Employee");
-
-                    b.Navigation("LeaveType");
                 });
 
             modelBuilder.Entity("LeaveManagement.Model.LeaveRequest", b =>
                 {
-                    b.HasOne("LeaveManagement.Model.LeaveType", "LeaveType")
+                    b.HasOne("LeaveManagement.Model.Employee", "Approver")
                         .WithMany()
-                        .HasForeignKey("LeaveTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ApproverId");
+
+                    b.HasOne("LeaveManagement.Model.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId");
 
                     b.HasOne("LeaveManagement.Model.Employee", "RequestingEmployee")
                         .WithMany()
-                        .HasForeignKey("RequestingEmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RequestingEmployeeId");
 
-                    b.Navigation("LeaveType");
+                    b.Navigation("Approver");
+
+                    b.Navigation("Employee");
 
                     b.Navigation("RequestingEmployee");
                 });
@@ -281,17 +236,6 @@ namespace LeaveManagement.Migrations
                         .HasForeignKey("EmpId");
 
                     b.Navigation("Emp");
-                });
-
-            modelBuilder.Entity("LeaveManagement.Model.UserLogin", b =>
-                {
-                    b.HasOne("LeaveManagement.Model.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("LeaveManagement.Model.Company", b =>

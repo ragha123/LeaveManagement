@@ -17,10 +17,8 @@ namespace LeaveManagement.Model
         public virtual DbSet<Employee> Employee { get; set; }
         public virtual DbSet<LeaveAllocation> LeaveAllocations { get; set; }
         public virtual DbSet<JwtAuthenticationModel> TokenAuthentication { get; set; }
-        public virtual DbSet<LeaveType> LeaveTypes { get; set; }
         public virtual  DbSet<LeaveRequest> LeaveRequests { get; set; }
         public virtual DbSet<Projects> Projects { get; set; }
-        public virtual DbSet<UserLogin> Registrationtab { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

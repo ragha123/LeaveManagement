@@ -12,7 +12,9 @@ namespace LeaveManagement.Model
         }
 
         [Key]
-        public int CompanyId { get; set; }
+        public Guid Id { get; set; }
+        [Required]
+        [StringLength(20)]
         public string Companyname { get; set; }
 
         public virtual ICollection<Employee> Employee { get; set; }

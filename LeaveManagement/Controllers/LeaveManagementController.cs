@@ -34,9 +34,9 @@ namespace LeaveManagement.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
-        public  IActionResult Post([FromBody] UserLogin userCred)
+        public  IActionResult Post([FromBody] Employee employee)
         {
-            var token = jwtAuthenticationManager.Post(userCred, userCred.Username,userCred.Password);
+            var token = jwtAuthenticationManager.Post( employee,employee.Username,employee.Password);
             if (token == null)
             {
                 return Unauthorized();
