@@ -12,25 +12,22 @@ namespace LeaveManagement.Model
             Projects = new HashSet<Projects>();
         }
 
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+
         public int Id { get; set; }
-        [Required]
-        [StringLength(15)]
+
         public string FirstName { get; set; }
-        [Required]
+
         public string LastName { get; set; }
-        [Required]
-        [DataType(DataType.EmailAddress, ErrorMessage = "E-mail is not valid")]
+
         public string Email { get; set; }
-        [Required]
-        public string Role { get; set; }
+
+        public virtual Role Role { get; set; }
+
         public int CompanyId { get; set; }
-        [Required]
-        [StringLength(10)]
+
         public string Username { get; set; }
-        [Required]
-        [DataType(DataType.Password)]
+
+        
         public string Password { get; set; }
         public bool IsDeleted { get; set; }
 

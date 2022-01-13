@@ -58,10 +58,7 @@ namespace LeaveManagement
             if (Employee != null)
             {
                 _context.LeaveRequests.Add(request);
-                _context.Database.OpenConnection();
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.LeaveRequests ON");
                 _context.SaveChanges();
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.LeaveRequests OFF");
             }
             return null;
             

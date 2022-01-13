@@ -8,11 +8,8 @@ namespace LeaveManagement.Model
 {
     public class LeaveAllocation
     {
-        [Key]
         public int Id { get; set; }
         public DateTime DateCreated { get; set; }
-
-        [ForeignKey("EmpId")]
         public virtual Employee Employee { get; set; }
         public int EmployeeId { get; set; }
          
