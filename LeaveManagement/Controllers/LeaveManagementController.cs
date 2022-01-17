@@ -1,4 +1,5 @@
-﻿using LeaveManagement.Model;
+﻿using LeaveManagement.DTO_models;
+using LeaveManagement.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -58,7 +59,7 @@ namespace LeaveManagement.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
-        public IActionResult RequestLeave([FromBody][Required] LeaveRequest request)
+        public IActionResult RequestLeave([FromBody][Required] LeaveRequestInfo request)
         {
             try
             {

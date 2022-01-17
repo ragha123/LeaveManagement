@@ -1,4 +1,5 @@
-﻿using LeaveManagement.Model;
+﻿using LeaveManagement.DTO_models;
+using LeaveManagement.Model;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace LeaveManagement
     public interface IJwtAuthenticationManager
     {
        string Post(Employee employee, string username, string password);
-        public IActionResult RequestLeave(LeaveRequest request);
+        public IActionResult RequestLeave(LeaveRequestInfo request);
 
 
     }

@@ -1,4 +1,5 @@
-﻿using LeaveManagement.Model;
+﻿using LeaveManagement.DTO_models;
+using LeaveManagement.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -52,12 +53,20 @@ namespace LeaveManagement
             }
             
         }
-        public IActionResult RequestLeave(LeaveRequest request)
+        public IActionResult RequestLeave(LeaveRequestInfo request)
         {
-            var Employee = _context.Employee.FirstOrDefault(x => x.Id == request.Employee.Id);
+            var Employee = _context.Employee.FirstOrDefault(x => x.Id == request.Employee);
             if (Employee != null)
             {
-                _context.LeaveRequests.Add(request);
+                var leaveRequest = new LeaveRequest
+                {
+                    Employee = request.Employee,
+                    Approver = request.Approver,
+                    StartDate = request.StartDate,
+                    EndDate = request.EndDate,
+                    Comments = request.Comments
+                };
+                _context.LeaveRequests.Add(leaveRequest);
                 _context.SaveChanges();
             }
             return null;
