@@ -68,7 +68,7 @@ namespace LeaveManagement.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property("Role")
+                    b.Property<Role>("Role")
                         .HasConversion<int>();
 
                     b.Property<string>("Username")
@@ -147,7 +147,7 @@ namespace LeaveManagement.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property("Status")
+                    b.Property<Status>("Status")
                         .HasConversion<int>();
 
                     b.HasKey("Id");

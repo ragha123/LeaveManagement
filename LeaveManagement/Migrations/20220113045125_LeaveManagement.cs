@@ -115,7 +115,7 @@ namespace LeaveManagement.Migrations
                         principalTable: "Employee",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
+                }); 
 
             migrationBuilder.CreateTable(
                 name: "Projects",
