@@ -6,11 +6,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace LeaveManagement
 {
@@ -70,6 +72,39 @@ namespace LeaveManagement
                 _context.SaveChanges();
             }
             return null;
+            
+        }
+
+        public Task<IEnumerable<LeaveRequest>> GetLeaveDetailsAsync(int Id)
+        {
+            
+                var detail = from s in _context.LeaveRequests
+                             select new ManagerViewResponse()
+                             {
+                                 Employee = s.Employee,
+                                 StartDate = s.StartDate,
+                                 EndDate = s.EndDate,
+                                 Comments = s.Comments
+                             };
+            
+            return (Task<IEnumerable<LeaveRequest>>)detail;
+
+        }
+
+        public async Task<ActionResult<ManagerViewResponse>> GetLeaveDetails(int id)
+        {
+            
+            var details = await _context.LeaveRequests.Select(b =>
+                new ManagerViewResponse()
+                {
+                    Employee = b.Employee,
+                    StartDate = b.StartDate,
+                    EndDate = b.EndDate,
+                    Comments = b.Comments,
+                    Approver = b.Approver
+                }).SingleOrDefaultAsync(b => b.Approver == id);
+
+            return details;
             
         }
     }

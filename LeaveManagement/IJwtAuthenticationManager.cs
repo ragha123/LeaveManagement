@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace LeaveManagement
 {
@@ -12,6 +13,13 @@ namespace LeaveManagement
     {
        string Post(Employee employee, string username, string password);
         public IActionResult RequestLeave(LeaveRequestInfo request);
+
+        /// <summary>
+        /// Gets LeaveRequest Detials
+        /// </summary>
+        /// <param name="Id">Manager ID</param>
+        /// <returns>LeaveRequest Details</returns>
+        Task<ActionResult<ManagerViewResponse>> GetLeaveDetails(int id);
 
 
     }

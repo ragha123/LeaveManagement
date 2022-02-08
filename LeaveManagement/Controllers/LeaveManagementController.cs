@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -70,6 +71,38 @@ namespace LeaveManagement.Controllers
                 return this.BadRequest();
             }
             return this.Ok();
+        }
+
+        /// <summary>
+        /// Retrieves list of Leave Details.
+        /// </summary>
+        /// <param name="managerId">Manager ID</param>
+        /// <returns>A collection of LeaveRequest.</returns>
+        /// <response code="200">Successfully retrieved list of leave request.</response>
+        /// <response code="404">No manager found for given managerId.</response>
+        /// <response code="403">Action not permitted for specified API key.</response>
+        /// <response code="401">Access token is missing or invalid.</response>
+        [HttpGet("leaverequest/manager/{id}")]
+        [ProducesResponseType(typeof(IEnumerable<ManagerViewResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult> GetLeaveDetailsAsync([FromRoute][Required] int managerId)
+        {
+            try
+            {
+                
+                var details = await jwtAuthenticationManager.GetLeaveDetails(managerId);
+
+                if (details == null) return NotFound();
+
+                return Ok(details);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Error retrieving data from the database");
+            }
         }
 
     }
