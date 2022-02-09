@@ -82,7 +82,7 @@ namespace LeaveManagement.Controllers
         /// <response code="404">No manager found for given managerId.</response>
         /// <response code="403">Action not permitted for specified API key.</response>
         /// <response code="401">Access token is missing or invalid.</response>
-        [Authorize(Roles = "Manager")]
+        [Authorize(Policy = "Manager")]
         [HttpGet("leaverequest/{managerId}")]
         [ProducesResponseType(typeof(IEnumerable<ManagerViewResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -92,7 +92,6 @@ namespace LeaveManagement.Controllers
         {
             try
             {
-                
                 var details = jwtAuthenticationManager.GetLeaveDetails(managerId);
 
                 if (details == null) return NotFound();
@@ -105,6 +104,5 @@ namespace LeaveManagement.Controllers
                     "Error retrieving data from the database");
             }
         }
-
     }
 }

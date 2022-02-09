@@ -42,6 +42,8 @@ namespace LeaveManagement
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer();
 
+            services.AddAuthorization(Options => Options.AddPolicy("Manager", policy => policy.RequireRole("Manager")));
+
             services.AddTransient<IJwtAuthenticationManager, JwtAuthenticationManager>();
         }
         
