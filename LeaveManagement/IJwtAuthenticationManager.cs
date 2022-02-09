@@ -19,7 +19,7 @@ namespace LeaveManagement
         /// </summary>
         /// <param name="Id">Manager ID</param>
         /// <returns>LeaveRequest Details</returns>
-        Task<ActionResult<ManagerViewResponse>> GetLeaveDetails(int id);
+        IEnumerable<ManagerViewResponse> GetLeaveDetails(int managerId);
 
 
     }

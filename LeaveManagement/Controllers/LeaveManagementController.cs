@@ -74,6 +74,29 @@ namespace LeaveManagement.Controllers
         }
 
         /// <summary>
+        /// Retrieves list of leave request.
+        /// </summary>
+        /// <param name="managerId">Manager ID</param>
+        /// <response code="200">list of leave Request.</response>
+        /// <response code="404">Not found.</response>
+        /// <response code="403">Action not permitted for specified API key.</response>
+        /// <response code="401">Access token is missing or invalid.</response>
+        [HttpGet("leaveReport/{managerId}")]
+        [ProducesResponseType(typeof(IEnumerable<ManagerViewResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
+        public IActionResult GetLeavesList([FromRoute][Required] int managerId)
+        {
+            var leave = jwtAuthenticationManager.GetLeaveDetails(managerId);
+
+            if (leave == null)
+                return this.NotFound();
+
+            return this.Ok(leave);
+        }
+
+        /// <summary>
         /// Retrieves list of Leave Details.
         /// </summary>
         /// <param name="managerId">Manager ID</param>
@@ -82,17 +105,17 @@ namespace LeaveManagement.Controllers
         /// <response code="404">No manager found for given managerId.</response>
         /// <response code="403">Action not permitted for specified API key.</response>
         /// <response code="401">Access token is missing or invalid.</response>
-        [HttpGet("leaverequest/manager/{id}")]
+        [HttpGet("leaverequest/{managerId}")]
         [ProducesResponseType(typeof(IEnumerable<ManagerViewResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(string), StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult> GetLeaveDetailsAsync([FromRoute][Required] int managerId)
+        public IActionResult GetLeaveDetailsAsync([FromRoute][Required] int managerId)
         {
             try
             {
                 
-                var details = await jwtAuthenticationManager.GetLeaveDetails(managerId);
+                var details = jwtAuthenticationManager.GetLeaveDetails(managerId);
 
                 if (details == null) return NotFound();
 

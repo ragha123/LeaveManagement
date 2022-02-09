@@ -74,38 +74,20 @@ namespace LeaveManagement
             return null;
             
         }
-
-        public Task<IEnumerable<LeaveRequest>> GetLeaveDetailsAsync(int Id)
+        
+        public IEnumerable<ManagerViewResponse> GetLeaveDetails(int managerId)
         {
-            
-                var detail = from s in _context.LeaveRequests
-                             select new ManagerViewResponse()
-                             {
-                                 Employee = s.Employee,
-                                 StartDate = s.StartDate,
-                                 EndDate = s.EndDate,
-                                 Comments = s.Comments
-                             };
-            
-            return (Task<IEnumerable<LeaveRequest>>)detail;
+            var employeedetail = from s in _context.LeaveRequests.Where(x => x.Approver == managerId)
+                                 select new ManagerViewResponse()
+                                 {
+                                     Employee = s.RequestingEmployee.Id,
+                                     StartDate = s.StartDate,
+                                     Comments = s.Comments,
+                                     Approver = s.Approver
+                                 };
 
-        }
-
-        public async Task<ActionResult<ManagerViewResponse>> GetLeaveDetails(int id)
-        {
-            
-            var details = await _context.LeaveRequests.Select(b =>
-                new ManagerViewResponse()
-                {
-                    Employee = b.Employee,
-                    StartDate = b.StartDate,
-                    EndDate = b.EndDate,
-                    Comments = b.Comments,
-                    Approver = b.Approver
-                }).SingleOrDefaultAsync(b => b.Approver == id);
-
-            return details;
-            
+                 return employeedetail;
+             
         }
     }
 }
