@@ -87,7 +87,6 @@ namespace LeaveManagement
                                  };
 
                  return employeedetail;
-             
         }
     }
 }
